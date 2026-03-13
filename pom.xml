@@ -2,12 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <!-- groupID must be the business group ID or ORGID -->
-    <groupId>30c778fb-5ad6-4a6f-808a-44b572b617ce</groupId>
-    <artifactId>greetings-andresc</artifactId>
+    <groupId>78661855-be5d-4c94-8a61-c0956dfd58a6</groupId>
+    <artifactId>greetings-sebastian</artifactId>
     <!-- This version is immutable, need to bump for every deployment-->
     <version>1.0.0</version>
     <packaging>mule-application</packaging>
-    <name>greetings-andresc</name>
+    <name>greetings-sebastian</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
