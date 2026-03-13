@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <!-- groupID must be the business group ID or ORGID -->
+    <groupId>30c778fb-5ad6-4a6f-808a-44b572b617ce</groupId>
+    <artifactId>greetings-andresc</artifactId>
+    <!-- This version is immutable, need to bump for every deployment-->
+    <version>1.0.0</version>
+    <packaging>mule-application</packaging>
+    <name>greetings-andresc</name>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>17</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        
+        <mule.version>4.11.2</mule.version>
+        <app.runtime>4.11.2</app.runtime>
+        <mule.maven.plugin.version>4.7.0</mule.maven.plugin.version>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.2.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.mule.tools.maven</groupId>
+                <artifactId>mule-maven-plugin</artifactId>
+                <version>${mule.maven.plugin.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <runtimeFabricDeployment>
+                        <!-- URL of the control plane -->
+                        <uri>https://anypoint.mulesoft.com</uri>
+                        <!-- Inherited from the project metadata -->
+                        <businessGroupId>${project.groupId}</businessGroupId>
+                        <provider>MC</provider>
+                        <environment>${environment}</environment>
+                        <!-- Target name is the RTF cluster name -->
+                        <target>${target}</target>
+                        <!-- mule version format muleruntime-java17 -->
+                        <!-- If not provided, will choose the latest Edge version -->
+                        <releaseChannel>EDGE</releaseChannel>
+                        <!--<muleVersion>4.10.1:12e-java17</muleVersion>-->
+                        <!-- Authentication to do the deployment -->
+                        <!-- Connected Apps, clientid and secret for CI Server -->
+                        <connectedAppClientId>${ca_client_id}</connectedAppClientId>
+                        <connectedAppClientSecret>${ca_client_secret}</connectedAppClientSecret>
+                        <connectedAppGrantType>client_credentials</connectedAppGrantType>
+                        <applicationName>${project.artifactId}</applicationName>
+                        <replicas>1</replicas>
+                        <!-- 5 minutes -->
+                        <deploymentTimeout>300000</deploymentTimeout>
+                        <properties>
+                            <custom>this demo value is visible in runtime manager</custom>
+                        </properties>
+                        <secureProperties>
+                            <message>Mulesoft Running in RTF. Not visible in Runtime Manager</message>
+                        </secureProperties>
+                        <deploymentSettings>
+                            <!-- If more than 2 replicas will gurantee different nodes -->
+                            <enforceDeployingReplicasAcrossNodes>false</enforceDeployingReplicasAcrossNodes>
+                            <resources>
+                                <cpu>
+                                    <reserved>20m</reserved>
+                                    <limit>1500m</limit>
+                                </cpu>
+                                <memory>
+                                    <reserved>700Mi</reserved>
+                                </memory>
+                            </resources>
+                            <http>
+                                <inbound>
+                                    <publicUrl>http://${project.artifactId}.mulesoft-training.com/</publicUrl>
+                                </inbound>
+                            </http>
+                        </deploymentSettings>
+                    </runtimeFabricDeployment>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <dependencies>
+        <dependency>
+            <groupId>org.mule.connectors</groupId>
+            <artifactId>mule-http-connector</artifactId>
+            <version>1.10.3</version>
+            <classifier>mule-plugin</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.connectors</groupId>
+            <artifactId>mule-sockets-connector</artifactId>
+            <version>1.2.5</version>
+            <classifier>mule-plugin</classifier>
+        </dependency>
+    </dependencies>
+    <repositories>
+        <repository>
+            <id>anypoint-exchange-v3</id>
+            <name>Anypoint Exchange</name>
+            <url>https://maven.anypoint.mulesoft.com/api/v3/maven</url>
+            <layout>default</layout>
+        </repository>
+        <repository>
+            <id>mulesoft-releases</id>
+            <name>MuleSoft Releases Repository</name>
+            <url>https://repository.mulesoft.org/releases/</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>mulesoft-releases</id>
+            <name>MuleSoft Releases Repository</name>
+            <layout>default</layout>
+            <url>https://repository.mulesoft.org/releases/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+    <!-- Controls the upload location of your JAR to exchange, required before attempting the deployment -->
+    <!-- provide the credentials using Maven Settings.xml file -->
+    <distributionManagement>
+        <repository>
+            <!-- This ID needs to be the same as in your maven settings file-->
+            <id>exchange-repository</id>
+            <name>Corporate Repository</name>
+            <!-- Inherits the project group ID as your organizations ID for the private exchange -->
+            <url>https://maven.anypoint.mulesoft.com/api/v3/organizations/${project.groupId}/maven</url>
+            <layout>default</layout>
+        </repository>
+    </distributionManagement>
+</project>
